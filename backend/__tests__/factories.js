@@ -8,9 +8,21 @@ factory.define('Pessoa', Pessoa, {
   nome: faker.name.firstName(),
   sobrenome: faker.name.lastName(),
   cpf: faker.random.number(),
-  data_nascimento: faker.date.past(),
+  nascimento: faker.date.past(),
   cep: faker.address.zipCode(),
   rua: faker.address.streetName(),
   bairro: faker.address.streetAddress(),
   cidade: faker.address.city(),
 });
+
+factory.define('PessoaDiferente', Pessoa, {
+  nome: faker.name.firstName(),
+  sobrenome: faker.name.lastName(),
+  cpf: faker.random.number(),
+  nascimento: faker.date.past(),
+  cep: faker.address.zipCode(),
+  rua: faker.address.streetName(),
+  bairro: faker.address.streetAddress(),
+  cidade: faker.address.city(),
+});
+export default factory;

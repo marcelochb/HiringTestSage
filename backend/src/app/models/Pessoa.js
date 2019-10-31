@@ -1,13 +1,13 @@
 import Sequelize, { Model } from 'sequelize';
 
-class Meetup extends Model {
+class Pessoa extends Model {
   static init(sequelize) {
     super.init(
       {
         nome: Sequelize.STRING,
         sobrenome: Sequelize.STRING,
         cpf: Sequelize.STRING,
-        data_nascimento: Sequelize.DATE,
+        nascimento: Sequelize.DATE,
         cep: Sequelize.STRING,
         rua: Sequelize.STRING,
         bairro: Sequelize.STRING,
@@ -21,4 +21,4 @@ class Meetup extends Model {
   }
 }
 
-export default Meetup;
+export default Pessoa;

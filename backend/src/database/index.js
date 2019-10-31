@@ -7,13 +7,12 @@ const models = [Pessoa];
 
 class Database {
   constructor() {
+    this.connection = new Sequelize(databaseConfig);
     this.init();
   }
 
   init() {
-    this.connection = new Sequelize(databaseConfig);
-
-    models.map(model => model.init(this.connection));
+    models.forEach(model => model.init(this.connection));
   }
 }
 
