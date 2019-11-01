@@ -135,22 +135,11 @@ describe('Pessoa-Update', () => {
   });
 
   it('should be able update', async () => {
-    /**
-     * Cria uma primeira pessoa fake na Tabela
-     */
-    await factory.create('Pessoa');
-    /**
-     * Cria uma segunda pessoa fake na Tablea
-     */
-    const pessoa = (await factory.create('PessoaDiferente')).dataValues;
+    const pessoa = (await factory.create('Pessoa')).dataValues;
 
-    /**
-     * Tenta alterar os dados da primeira pessoa,
-     * com os dados da segnda pessoa
-     */
     const response = await request(app)
       .put(`/pessoas/${pessoa.id}`)
-      .send({ ...pessoa, nome: 'Nome alterado' });
+      .send({ ...pessoa, nome: 'Nome alterado', cpf: '12345678' });
 
     expect(response.body.nome).toBe('Nome alterado');
   });
@@ -165,7 +154,7 @@ describe('Pessoa-List', () => {
     await factory.create('Pessoa');
     await factory.create('PessoaDiferente');
 
-    const response = request(app).get('/pessoas');
+    const response = await request(app).get('/pessoas');
 
     expect(response.body).toHaveLength(2);
   });

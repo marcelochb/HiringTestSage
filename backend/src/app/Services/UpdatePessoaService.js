@@ -41,8 +41,7 @@ class UpdatePessoaService {
         throw new Error('Data de nascimento invalida.');
       }
     }
-
-    await Pessoa.update({
+    await pessoa.update({
       nome,
       sexo,
       cpf,

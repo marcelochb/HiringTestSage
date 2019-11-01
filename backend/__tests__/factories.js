@@ -22,7 +22,7 @@ factory.define('PessoaDiferente', Pessoa, {
   cpf: faker.random.number(),
   nascimento: faker.date.past(),
   cep: faker.address.zipCode(),
-  rua: faker.address.streetName(),
+  rua: faker.random.number(),
   numero: faker.random.number(),
   bairro: faker.address.streetAddress(),
   cidade: faker.address.city(),
