@@ -11,6 +11,10 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      sexo: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
       cpf: {
         type: Sequelize.STRING,
         allowNull: false,
@@ -26,6 +30,10 @@ module.exports = {
       rua: {
         type: Sequelize.STRING,
         allowNull: false,
+      },
+      numero: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
       },
       bairro: {
         type: Sequelize.STRING,

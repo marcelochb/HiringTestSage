@@ -3,15 +3,15 @@ import { object, string, date, number } from 'yup';
 export default async (req, res, next) => {
   try {
     const schema = object().shape({
-      nome: string().required(),
-      sexo: string().required(),
-      cpf: string().required(),
-      nascimento: date().required(),
-      cep: string().required(),
-      rua: string().required(),
+      nome: string(),
+      sexo: string(),
+      cpf: string(),
+      nascimento: date(),
+      cep: string(),
+      rua: string(),
       numero: number(),
-      bairro: string().required(),
-      cidade: string().required(),
+      bairro: string(),
+      cidade: string(),
     });
 
     await schema.validate(req.body, { abortEarly: false });

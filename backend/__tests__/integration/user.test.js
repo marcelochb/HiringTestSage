@@ -1,4 +1,5 @@
 import request from 'supertest';
+import faker from 'faker';
 import app from '../../src/app';
 
 import truncate from '../util/truncate';
@@ -30,7 +31,7 @@ describe('Pessoa-Create', () => {
     expect(response.body.messages[0]).toBe('nome is a required field');
   });
 
-  it('should not be able register duplicate field', async () => {
+  it('should not be able register duplicate name', async () => {
     /**
      * Cria na tabela uma Pessoa fake
      */
@@ -44,6 +45,34 @@ describe('Pessoa-Create', () => {
       .send({ ...pessoa, nome: pessoa.nome });
 
     expect(response.body.error).toBe('Já existe uma pessoa com este nome.');
+  });
+
+  it('should not be able register duplicate cpf', async () => {
+    /**
+     * Cria na tabela uma Pessoa fake
+     */
+    const pessoa = (await factory.create('Pessoa')).dataValues;
+
+    /**
+     * Tenta Criar outra Pessa com os mesmo dados
+     */
+    const response = await request(app)
+      .post('/pessoas')
+      .send({ ...pessoa, nome: faker.name.findName(), cpf: pessoa.cpf });
+
+    expect(response.body.error).toBe('Já existe uma pessoa com este CPF.');
+  });
+
+  it('should not be able register with invalid birsday date', async () => {
+    const pessoa = await factory.attrs('Pessoa', {
+      nascimento: faker.date.future(),
+    });
+
+    const response = await request(app)
+      .post('/pessoas')
+      .send(pessoa);
+
+    expect(response.body.error).toBe('Data de nascimento invalida.');
   });
 
   it('should be able register', async () => {
@@ -61,8 +90,9 @@ describe('Pessoa-Update', () => {
   beforeEach(async () => {
     await truncate();
   });
+  it('should not be able Update with invalid id', async () => {});
 
-  it('should not be able Update without field', async () => {
+  it('should not be able Update duplicate name', async () => {
     /**
      * Cria uma primeira pessoa fake na Tabela
      */
@@ -80,14 +110,14 @@ describe('Pessoa-Update', () => {
       .put(`/pessoas/${id}`)
       .send({ nome });
 
-    expect(response.body.error).toBe('Nome da pessoa já existe');
+    expect(response.body.error).toBe('Já existe uma pessoa com este nome.');
   });
 
-  it('should be able update field', async () => {
+  it('should not be able Update duplicate cpf', async () => {
     /**
      * Cria uma primeira pessoa fake na Tabela
      */
-    await factory.create('Pessoa');
+    const { cpf } = await factory.create('Pessoa');
     /**
      * Cria uma segunda pessoa fake na Tablea
      */
@@ -99,7 +129,28 @@ describe('Pessoa-Update', () => {
      */
     const response = await request(app)
       .put(`/pessoas/${id}`)
-      .send({ nome: 'Nome alterado' });
+      .send({ cpf });
+
+    expect(response.body.error).toBe('Já existe uma pessoa com este CPF.');
+  });
+
+  it('should be able update', async () => {
+    /**
+     * Cria uma primeira pessoa fake na Tabela
+     */
+    await factory.create('Pessoa');
+    /**
+     * Cria uma segunda pessoa fake na Tablea
+     */
+    const pessoa = (await factory.create('PessoaDiferente')).dataValues;
+
+    /**
+     * Tenta alterar os dados da primeira pessoa,
+     * com os dados da segnda pessoa
+     */
+    const response = await request(app)
+      .put(`/pessoas/${pessoa.id}`)
+      .send({ ...pessoa, nome: 'Nome alterado' });
 
     expect(response.body.nome).toBe('Nome alterado');
   });
