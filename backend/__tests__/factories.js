@@ -5,8 +5,7 @@ import { factory } from 'factory-girl';
 import Pessoa from '../src/app/models/Pessoa';
 
 factory.define('Pessoa', Pessoa, {
-  nome: faker.name.firstName(),
-  sobrenome: faker.name.lastName(),
+  nome: faker.name.findName(),
   cpf: faker.random.number(),
   nascimento: faker.date.past(),
   cep: faker.address.zipCode(),
@@ -16,8 +15,7 @@ factory.define('Pessoa', Pessoa, {
 });
 
 factory.define('PessoaDiferente', Pessoa, {
-  nome: faker.name.firstName(),
-  sobrenome: faker.name.lastName(),
+  nome: faker.name.findName(),
   cpf: faker.random.number(),
   nascimento: faker.date.past(),
   cep: faker.address.zipCode(),

@@ -1,7 +1,11 @@
 import { Router } from 'express';
 
+import PessoaController from './app/controllers/PessoaController';
+
+import validatePessoaStore from './app/Validators/PessoaStore';
+
 const routes = new Router();
 
-routes.get('/', (req, res) => res.json({ message: 'Welcome to Omni CLI' }));
+routes.post('/pessoas', validatePessoaStore, PessoaController.store);
 
 export default routes;

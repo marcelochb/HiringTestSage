@@ -5,7 +5,6 @@ class Pessoa extends Model {
     super.init(
       {
         nome: Sequelize.STRING,
-        sobrenome: Sequelize.STRING,
         cpf: Sequelize.STRING,
         nascimento: Sequelize.DATE,
         cep: Sequelize.STRING,

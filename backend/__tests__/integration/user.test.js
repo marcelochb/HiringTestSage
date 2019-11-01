@@ -27,23 +27,23 @@ describe('Pessoa-Create', () => {
       .post('/pessoas')
       .send(pessoa);
 
-    expect(response.body.message[0]).tobe('nome is a required field');
+    expect(response.body.messages[0]).toBe('nome is a required field');
   });
 
   it('should not be able register duplicate field', async () => {
     /**
      * Cria na tabela uma Pessoa fake
      */
-    const pessoa = await factory.create('Pessoa');
+    const pessoa = (await factory.create('Pessoa')).dataValues;
 
     /**
      * Tenta Criar outra Pessa com os mesmo dados
      */
-    const response = request(app)
+    const response = await request(app)
       .post('/pessoas')
-      .send(pessoa);
+      .send({ ...pessoa, nome: pessoa.nome });
 
-    expect(response.body.error).tobe('Nome da pessoa já existe.');
+    expect(response.body.error).toBe('Já existe uma pessoa com este nome.');
   });
 
   it('should be able register', async () => {
@@ -80,7 +80,7 @@ describe('Pessoa-Update', () => {
       .put(`/pessoas/${id}`)
       .send({ nome });
 
-    expect(response.body.error).tobe('Nome da pessoa já existe');
+    expect(response.body.error).toBe('Nome da pessoa já existe');
   });
 
   it('should be able update field', async () => {
@@ -101,7 +101,7 @@ describe('Pessoa-Update', () => {
       .put(`/pessoas/${id}`)
       .send({ nome: 'Nome alterado' });
 
-    expect(response.body.nome).tobe('Nome alterado');
+    expect(response.body.nome).toBe('Nome alterado');
   });
 });
 
@@ -130,6 +130,6 @@ describe('Pessoa-Delete', () => {
 
     const response = await request(app).delete(`/pessoas/${id}`);
 
-    expect(response.status).tobe(200);
+    expect(response.status).toBe(200);
   });
 });

@@ -11,10 +11,6 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      sobrenome: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
       cpf: {
         type: Sequelize.STRING,
         allowNull: false,
