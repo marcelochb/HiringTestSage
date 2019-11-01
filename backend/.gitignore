@@ -7,4 +7,4 @@ tmp/*
 
 dist
 
-__tests__/covarage/
+__tests__/coverage/
