@@ -16,7 +16,7 @@ export default createGlobalStyle`
 html, body, #root {
   height: 100%;
 }
-body, input, button, textarea {
+body, input, button, textarea, select {
   font: 14px helvetica, sans-serif;
 }
 a {

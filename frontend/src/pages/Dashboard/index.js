@@ -24,7 +24,7 @@ export default function Dasshboard() {
       <Content>
         <header>
           <strong>Pessoas</strong>
-          <Link to="/pessoa/create">
+          <Link to="/create">
             <button type="button">
               <MdLoyalty />
               Novo
