@@ -5,7 +5,14 @@ import * as Yup from 'yup';
 
 import { createPessoaRequest } from '~/store/modules/pessoa/actions';
 
-import { Container, Content, DadosPessoais, Endereco, Voltar } from './styles';
+import {
+  Container,
+  Content,
+  DadosPessoais,
+  Endereco,
+  VoltarButton,
+  SubmitButton,
+} from './styles';
 
 const schema = Yup.object().shape({
   nome: Yup.string().required('O Nome é obrigatório'),
@@ -13,10 +20,10 @@ const schema = Yup.object().shape({
   cpf: Yup.string().required('A CPF é obrigatório'),
   nascimento: Yup.string().required('A Data de nascimento é obrigatória'),
   cep: Yup.string().required('O Nome é obrigatório'),
-  rua: Yup.string().required('O Sexo é obrigatório'),
-  numero: Yup.string().required('A CPF é obrigatório'),
-  bairro: Yup.string().required('A CPF é obrigatório'),
-  cidade: Yup.string().required('A CPF é obrigatório'),
+  rua: Yup.string().required('A rua é obrigatória'),
+  numero: Yup.string().required('O numero é obrigatório'),
+  bairro: Yup.string().required('O bairro é obrigatório'),
+  cidade: Yup.string().required('A cidade é obrigatório'),
 });
 
 export default function CreatePessoas() {
@@ -68,6 +75,11 @@ export default function CreatePessoas() {
         cidade
       )
     );
+
+    setNome('');
+    setSexo('');
+    setCpf('');
+    setNascimento('');
   }
 
   return (
@@ -112,12 +124,12 @@ export default function CreatePessoas() {
             <Input name="cidade" placeholder="Digite o cidade" />
           </Endereco>
           <aside>
-            <Voltar type="button" visible={visible}>
+            <VoltarButton type="button" visible={visible}>
               Voltar
-            </Voltar>
-            <button type="submit" onClick={handleVisible}>
+            </VoltarButton>
+            <SubmitButton type="submit" onClick={handleVisible}>
               {visible ? 'Continuar...' : 'Salvar'}
-            </button>
+            </SubmitButton>
           </aside>
         </Form>
       </Content>

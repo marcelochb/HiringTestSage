@@ -8,7 +8,7 @@ export default function pessoa(state = INITIAL_STATE, action) {
   return produce(state, draft => {
     switch (action.type) {
       case '@pessoa/DETAIL_REQUEST': {
-        draft.detail = action.payload.pessoa;
+        draft.detail = action.payload;
         break;
       }
       case '@pessoa/UPDATE_SUCCESS': {

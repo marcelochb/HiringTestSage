@@ -39,10 +39,20 @@ export function updatePessoaSuccess(pessoa) {
   };
 }
 
-export function detailPessoaRequest(pessoa) {
+export function detailPessoaRequest(
+  nome,
+  sexo,
+  cpf,
+  nascimento,
+  cep,
+  rua,
+  numero,
+  bairro,
+  cidade
+) {
   return {
     type: '@pessoa/DETAIL_REQUEST',
-    payload: { pessoa },
+    payload: { nome, sexo, cpf, nascimento, cep, rua, numero, bairro, cidade },
   };
 }
 

@@ -1,23 +1,59 @@
 import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { MdHighlightOff, MdLoyalty } from 'react-icons/md';
-// import { toast } from 'react-toastify';
 
 import { Container, Content, Linha, Nome } from './styles';
 
+import {
+  destroyPessoaRequest,
+  detailPessoaRequest,
+} from '~/store/modules/pessoa/actions';
 import api from '~/services/api';
 
 export default function Dasshboard() {
   const [pessoas, setPessoas] = useState([]);
+  const dispatch = useDispatch();
+
+  async function loadPessoas() {
+    const response = await api.get('pessoas');
+
+    setPessoas(response.data);
+  }
 
   useEffect(() => {
-    async function loadPessoas() {
-      const response = await api.get('pessoas');
-
-      setPessoas(response.data);
-    }
     loadPessoas();
   }, [pessoas]);
+
+  async function handleDestroy({ id }) {
+    dispatch(destroyPessoaRequest(id));
+  }
+
+  function handleDetail({
+    nome,
+    sexo,
+    cpf,
+    nascimento,
+    cep,
+    rua,
+    numero,
+    bairro,
+    cidade,
+  }) {
+    dispatch(
+      detailPessoaRequest(
+        nome,
+        sexo,
+        cpf,
+        nascimento,
+        cep,
+        rua,
+        numero,
+        bairro,
+        cidade
+      )
+    );
+  }
 
   return (
     <Container>
@@ -34,10 +70,12 @@ export default function Dasshboard() {
         <ul>
           {pessoas.map(pessoa => (
             <Linha key={pessoa.id}>
-              <Nome>{pessoa.nome}</Nome>
+              <Link to="/update">
+                <Nome onClick={() => handleDetail(pessoa)}>{pessoa.nome}</Nome>
+              </Link>
               <span>
                 {pessoa.cidade}
-                <MdHighlightOff />
+                <MdHighlightOff onClick={() => handleDestroy(pessoa)} />
               </span>
             </Linha>
           ))}
