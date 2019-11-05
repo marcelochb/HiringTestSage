@@ -5,7 +5,7 @@ import * as Yup from 'yup';
 
 import { createPessoaRequest } from '~/store/modules/pessoa/actions';
 
-import { Container, Content, DadosPessoais, Endereco } from './styles';
+import { Container, Content, DadosPessoais, Endereco, Voltar } from './styles';
 
 const schema = Yup.object().shape({
   nome: Yup.string().required('O Nome é obrigatório'),
@@ -22,9 +22,26 @@ const schema = Yup.object().shape({
 export default function CreatePessoas() {
   const [visible, setVisible] = useState(true);
   const dispatch = useDispatch();
+  const [nome, setNome] = useState([]);
+  const [sexo, setSexo] = useState([]);
+  const [cpf, setCpf] = useState([]);
+  const [nascimento, setNascimento] = useState([]);
 
   async function handleVisible() {
-    setVisible(!visible);
+    try {
+      const schemaDadosPessoais = Yup.object().shape({
+        nome: Yup.string().required('O Nome é obrigatório'),
+        sexo: Yup.string().required('O Sexo é obrigatório'),
+        cpf: Yup.string().required('A CPF é obrigatório'),
+        nascimento: Yup.string().required('A Data de nascimento é obrigatória'),
+      });
+
+      schemaDadosPessoais.validateSync(
+        { nome, sexo, cpf, nascimento },
+        { abortEarly: false }
+      );
+      setVisible(!visible);
+    } catch (error) {}
   }
 
   function handleSubmit({
@@ -38,24 +55,19 @@ export default function CreatePessoas() {
     bairro,
     cidade,
   }) {
-    if (visible) {
-      console.log('entrou');
-      setVisible(!visible);
-    } else {
-      dispatch(
-        createPessoaRequest(
-          nome,
-          sexo,
-          cpf,
-          nascimento,
-          cep,
-          rua,
-          numero,
-          bairro,
-          cidade
-        )
-      );
-    }
+    dispatch(
+      createPessoaRequest(
+        nome,
+        sexo,
+        cpf,
+        nascimento,
+        cep,
+        rua,
+        numero,
+        bairro,
+        cidade
+      )
+    );
   }
 
   return (
@@ -64,12 +76,30 @@ export default function CreatePessoas() {
         <Form schema={schema} onSubmit={handleSubmit}>
           <DadosPessoais visible={visible}>
             <strong>Sobre Você</strong>
-            <Input name="nome" placeholder="Digite seu nome completo" />
-            <Input name="sexo" placeholder="Digite o sexo" />
-            <Input name="cpf" placeholder="Digite o cpf" />
+            <Input
+              name="nome"
+              placeholder="Digite seu nome completo"
+              onChange={e => setNome(e.target.value)}
+              value={nome}
+            />
+            <Input
+              name="sexo"
+              placeholder="Digite o sexo"
+              onChange={e => setSexo(e.target.value)}
+              value={sexo}
+            />
+            <Input
+              name="cpf"
+              placeholder="Digite o cpf"
+              onChange={e => setCpf(e.target.value)}
+              value={cpf}
+            />
             <Input
               name="nascimento"
               placeholder="Digite a data de nascimento"
+              onChange={e => setNascimento(e.target.value)}
+              value={nascimento}
+              mask="99/99/9999"
             />
           </DadosPessoais>
 
@@ -82,6 +112,9 @@ export default function CreatePessoas() {
             <Input name="cidade" placeholder="Digite o cidade" />
           </Endereco>
           <aside>
+            <Voltar type="button" visible={visible}>
+              Voltar
+            </Voltar>
             <button type="submit" onClick={handleVisible}>
               {visible ? 'Continuar...' : 'Salvar'}
             </button>
