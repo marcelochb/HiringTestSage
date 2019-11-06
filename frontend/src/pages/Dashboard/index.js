@@ -5,11 +5,9 @@ import { MdHighlightOff, MdLoyalty } from 'react-icons/md';
 
 import { Container, Content, Linha, Nome } from './styles';
 
-import {
-  destroyPessoaRequest,
-  detailPessoaRequest,
-} from '~/store/modules/pessoa/actions';
+import { detailPessoaRequest } from '~/store/modules/pessoa/actions';
 import api from '~/services/api';
+import { toast } from 'react-toastify';
 
 export default function Dasshboard() {
   const [pessoas, setPessoas] = useState([]);
@@ -26,7 +24,15 @@ export default function Dasshboard() {
   }, [pessoas]);
 
   async function handleDestroy({ id }) {
-    dispatch(destroyPessoaRequest(id));
+    try {
+      await api.delete(`pessoas/${id}`);
+
+      toast.success('Pessoa deletada com sucesso.');
+
+      loadPessoas();
+    } catch (err) {
+      toast.error('Falha ao deletar.');
+    }
   }
 
   function handleDetail({

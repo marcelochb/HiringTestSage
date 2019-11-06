@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
 import { Form, Input } from '@rocketseat/unform';
 import * as Yup from 'yup';
 
-import { createPessoaRequest } from '~/store/modules/pessoa/actions';
+import InputMask from 'react-input-mask';
 
 import {
   Container,
@@ -13,22 +12,31 @@ import {
   VoltarButton,
   SubmitButton,
 } from './styles';
+import api from '~/services/api';
+import history from '~/services/history';
+import { toast } from 'react-toastify';
 
-const schema = Yup.object().shape({
-  nome: Yup.string().required('O Nome é obrigatório'),
-  sexo: Yup.string().required('O Sexo é obrigatório'),
-  cpf: Yup.string().required('A CPF é obrigatório'),
-  nascimento: Yup.string().required('A Data de nascimento é obrigatória'),
-  cep: Yup.string().required('O Nome é obrigatório'),
+const schemaEndereco = Yup.object().shape({
+  // nome: Yup.string().required('O Nome é obrigatório'),
+  // sexo: Yup.string().required('O Sexo é obrigatório'),
+  // cpf: Yup.string().required('O CPF é obrigatório'),
+  // nascimento: Yup.string().required('A Data de nascimento é obrigatória'),
+  cep: Yup.string().required('O Cep é obrigatório'),
   rua: Yup.string().required('A rua é obrigatória'),
-  numero: Yup.string().required('O numero é obrigatório'),
+  numero: Yup.number().required('O numero é obrigatório'),
   bairro: Yup.string().required('O bairro é obrigatório'),
   cidade: Yup.string().required('A cidade é obrigatório'),
 });
 
+const schemaDadosPessoais = Yup.object().shape({
+  nome: Yup.string().required('O Nome é obrigatório'),
+  sexo: Yup.string().required('O Sexo é obrigatório'),
+  cpf: Yup.string().required('A CPF é obrigatório'),
+  nascimento: Yup.string().required('A Data de nascimento é obrigatória'),
+});
+
 export default function CreatePessoas() {
   const [visible, setVisible] = useState(true);
-  const dispatch = useDispatch();
   const [nome, setNome] = useState([]);
   const [sexo, setSexo] = useState([]);
   const [cpf, setCpf] = useState([]);
@@ -36,13 +44,6 @@ export default function CreatePessoas() {
 
   async function handleVisible() {
     try {
-      const schemaDadosPessoais = Yup.object().shape({
-        nome: Yup.string().required('O Nome é obrigatório'),
-        sexo: Yup.string().required('O Sexo é obrigatório'),
-        cpf: Yup.string().required('A CPF é obrigatório'),
-        nascimento: Yup.string().required('A Data de nascimento é obrigatória'),
-      });
-
       schemaDadosPessoais.validateSync(
         { nome, sexo, cpf, nascimento },
         { abortEarly: false }
@@ -51,7 +52,7 @@ export default function CreatePessoas() {
     } catch (error) {}
   }
 
-  function handleSubmit({
+  async function handleSubmit({
     nome,
     sexo,
     cpf,
@@ -62,8 +63,8 @@ export default function CreatePessoas() {
     bairro,
     cidade,
   }) {
-    dispatch(
-      createPessoaRequest(
+    try {
+      await api.post('pessoas', {
         nome,
         sexo,
         cpf,
@@ -72,20 +73,28 @@ export default function CreatePessoas() {
         rua,
         numero,
         bairro,
-        cidade
-      )
-    );
+        cidade,
+      });
+      toast.success('Cadastro realizado com sucesso.');
 
-    setNome('');
-    setSexo('');
-    setCpf('');
-    setNascimento('');
+      setNome('');
+      setSexo('');
+      setCpf('');
+      setNascimento('');
+
+      history.push('/');
+    } catch (err) {
+      toast.error('Falha ao fazer o cadastro.');
+    }
   }
 
   return (
     <Container>
       <Content>
-        <Form schema={schema} onSubmit={handleSubmit}>
+        <Form
+          schema={visible ? schemaDadosPessoais : schemaEndereco}
+          onSubmit={handleSubmit}
+        >
           <DadosPessoais visible={visible}>
             <strong>Sobre Você</strong>
             <Input
@@ -100,25 +109,34 @@ export default function CreatePessoas() {
               onChange={e => setSexo(e.target.value)}
               value={sexo}
             />
-            <Input
-              name="cpf"
-              placeholder="Digite o cpf"
+            <InputMask
+              mask="999.999.999-99"
               onChange={e => setCpf(e.target.value)}
               value={cpf}
-            />
-            <Input
-              name="nascimento"
-              placeholder="Digite a data de nascimento (dd/mm/yyyy)"
+            >
+              {() => <Input name="cpf" placeholder="Digite o cpf" />}
+            </InputMask>
+            <InputMask
+              mask="99/99/9999"
               onChange={e => setNascimento(e.target.value)}
               value={nascimento}
-            />
+            >
+              {() => (
+                <Input
+                  name="nascimento"
+                  placeholder="Digite a data de nascimento (dd/mm/yyyy)"
+                />
+              )}
+            </InputMask>
           </DadosPessoais>
 
           <Endereco visible={visible}>
             <strong>Endereço</strong>
-            <Input name="cep" placeholder="Digite seu cep completo" />
+            <InputMask mask="99.999-999">
+              {() => <Input name="cep" placeholder="Digite seu cep completo" />}
+            </InputMask>
             <Input name="rua" placeholder="Digite a rua" />
-            <Input name="numero" placeholder="Digite o numero" />
+            <Input name="numero" type="number" placeholder="Digite o numero" />
             <Input name="bairro" placeholder="Digite o bairro" />
             <Input name="cidade" placeholder="Digite o cidade" />
           </Endereco>
@@ -126,7 +144,7 @@ export default function CreatePessoas() {
             <VoltarButton type="button" visible={visible}>
               Voltar
             </VoltarButton>
-            <SubmitButton type="submit" onClick={handleVisible}>
+            <SubmitButton id="submit" type="submit" onClick={handleVisible}>
               {visible ? 'Continuar...' : 'Salvar'}
             </SubmitButton>
           </aside>
