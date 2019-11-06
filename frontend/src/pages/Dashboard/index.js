@@ -30,6 +30,7 @@ export default function Dasshboard() {
   }
 
   function handleDetail({
+    id,
     nome,
     sexo,
     cpf,
@@ -42,6 +43,7 @@ export default function Dasshboard() {
   }) {
     dispatch(
       detailPessoaRequest(
+        id,
         nome,
         sexo,
         cpf,

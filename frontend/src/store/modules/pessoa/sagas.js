@@ -38,6 +38,41 @@ export function* createPessoa({ payload }) {
   }
 }
 
+export function* updatePessoa({ payload }) {
+  try {
+    const {
+      id,
+      nome,
+      sexo,
+      cpf,
+      nascimento,
+      cep,
+      rua,
+      numero,
+      bairro,
+      cidade,
+    } = payload;
+
+    yield call(api.put, `pessoas/${id}`, {
+      nome,
+      sexo,
+      cpf,
+      nascimento,
+      cep,
+      rua,
+      numero,
+      bairro,
+      cidade,
+    });
+
+    toast.success('Atualizado com sucesso.');
+
+    history.push('/');
+  } catch (err) {
+    toast.error('Falha ao atualizar');
+  }
+}
+
 export function* destroyPessoa({ payload }) {
   try {
     const { id } = payload;
@@ -55,6 +90,6 @@ export function detailPessoa() {
 
 export default all([
   takeLatest('@pessoa/CREATE_REQUEST', createPessoa),
+  takeLatest('@pessoa/UPDATE_REQUEST', updatePessoa),
   takeLatest('@pessoa/DESTROY_REQUEST', destroyPessoa),
-  // takeLatest('@pessoa/DETAIL_REQUEST', detailPessoa),
 ]);

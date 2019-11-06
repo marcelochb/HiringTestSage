@@ -108,10 +108,9 @@ export default function CreatePessoas() {
             />
             <Input
               name="nascimento"
-              placeholder="Digite a data de nascimento"
+              placeholder="Digite a data de nascimento (dd/mm/yyyy)"
               onChange={e => setNascimento(e.target.value)}
               value={nascimento}
-              mask="99/99/9999"
             />
           </DadosPessoais>
 

@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Form, Input } from '@rocketseat/unform';
+import { format, parseISO } from 'date-fns';
 import * as Yup from 'yup';
 
-import { createPessoaRequest } from '~/store/modules/pessoa/actions';
+import { updatePessoaRequest } from '~/store/modules/pessoa/actions';
 
 import {
   Container,
@@ -32,27 +33,12 @@ export default function CreatePessoas() {
   const pessoa = useSelector(state => state.pessoa.detail);
 
   const [visible, setVisible] = useState(true);
-  const [nome, setNome] = useState([]);
-  const [sexo, setSexo] = useState([]);
-  const [cpf, setCpf] = useState([]);
-  const [nascimento, setNascimento] = useState([]);
-
-  async function handleVisible() {
-    try {
-      const schemaDadosPessoais = Yup.object().shape({
-        nome: Yup.string().required('O Nome é obrigatório'),
-        sexo: Yup.string().required('O Sexo é obrigatório'),
-        cpf: Yup.string().required('A CPF é obrigatório'),
-        nascimento: Yup.string().required('A Data de nascimento é obrigatória'),
-      });
-
-      schemaDadosPessoais.validateSync(
-        { nome, sexo, cpf, nascimento },
-        { abortEarly: false }
-      );
-      setVisible(!visible);
-    } catch (error) {}
-  }
+  const [nome, setNome] = useState(pessoa.nome);
+  const [sexo, setSexo] = useState(pessoa.sexo);
+  const [cpf, setCpf] = useState(pessoa.cpf);
+  const [nascimento, setNascimento] = useState(
+    format(parseISO(pessoa.nascimento), 'dd/MM/yyyy')
+  );
 
   function handleSubmit({
     nome,
@@ -65,29 +51,25 @@ export default function CreatePessoas() {
     bairro,
     cidade,
   }) {
-    dispatch(
-      createPessoaRequest(
-        nome,
-        sexo,
-        cpf,
-        nascimento,
-        cep,
-        rua,
-        numero,
-        bairro,
-        cidade
-      )
-    );
-
-    setNome('');
-    setSexo('');
-    setCpf('');
-    setNascimento('');
+    if (document.getElementById('submit').innerText === 'Continuar...') {
+      setVisible(!visible);
+    } else {
+      dispatch(
+        updatePessoaRequest(
+          pessoa.id,
+          nome,
+          sexo,
+          cpf,
+          nascimento,
+          cep,
+          rua,
+          numero,
+          bairro,
+          cidade
+        )
+      );
+    }
   }
-
-  const initialData = {
-    ...pessoa,
-  };
 
   return (
     <Container>
@@ -95,24 +77,40 @@ export default function CreatePessoas() {
         <Form schema={schema} onSubmit={handleSubmit} initialData={pessoa}>
           <DadosPessoais visible={visible}>
             <strong>Sobre Você</strong>
-            {console.log(pessoa)}
             <Input
               name="nome"
               placeholder="Digite seu nome completo"
-              // onChange={e => setNome(e.target.value)}
-              // value={nome}
+              onChange={e => setNome(e.target.value)}
+              value={nome}
             />
-            <Input name="sexo" placeholder="Digite o sexo" />
-            <Input name="cpf" placeholder="Digite o cpf" />
+            <Input
+              name="sexo"
+              placeholder="Digite o sexo"
+              onChange={e => setSexo(e.target.value)}
+              value={sexo}
+            />
+            <Input
+              name="cpf"
+              placeholder="Digite o cpf"
+              onChange={e => setCpf(e.target.value)}
+              value={cpf}
+            />
+
             <Input
               name="nascimento"
-              placeholder="Digite a data de nascimento"
+              placeholder="Digite a data de nascimento (dd/mm/yyyy)"
+              onChange={e => setNascimento(e.target.value)}
+              value={nascimento}
             />
           </DadosPessoais>
 
           <Endereco visible={visible}>
             <strong>Endereço</strong>
-            <Input name="cep" placeholder="Digite seu cep completo" />
+            <Input
+              name="cep"
+              mask="99.999-999"
+              placeholder="Digite seu cep completo"
+            />
             <Input name="rua" placeholder="Digite a rua" />
             <Input name="numero" placeholder="Digite o numero" />
             <Input name="bairro" placeholder="Digite o bairro" />
@@ -122,7 +120,7 @@ export default function CreatePessoas() {
             <VoltarButton type="button" visible={visible}>
               Voltar
             </VoltarButton>
-            <SubmitButton type="submit" onClick={handleVisible}>
+            <SubmitButton id="submit" type="submit">
               {visible ? 'Continuar...' : 'Salvar'}
             </SubmitButton>
           </aside>

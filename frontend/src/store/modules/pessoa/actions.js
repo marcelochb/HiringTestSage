@@ -16,6 +16,7 @@ export function createPessoaRequest(
 }
 
 export function updatePessoaRequest(
+  id,
   nome,
   sexo,
   cpf,
@@ -28,7 +29,18 @@ export function updatePessoaRequest(
 ) {
   return {
     type: '@pessoa/UPDATE_REQUEST',
-    payload: { nome, sexo, cpf, nascimento, cep, rua, numero, bairro, cidade },
+    payload: {
+      id,
+      nome,
+      sexo,
+      cpf,
+      nascimento,
+      cep,
+      rua,
+      numero,
+      bairro,
+      cidade,
+    },
   };
 }
 
@@ -40,6 +52,7 @@ export function updatePessoaSuccess(pessoa) {
 }
 
 export function detailPessoaRequest(
+  id,
   nome,
   sexo,
   cpf,
@@ -52,7 +65,18 @@ export function detailPessoaRequest(
 ) {
   return {
     type: '@pessoa/DETAIL_REQUEST',
-    payload: { nome, sexo, cpf, nascimento, cep, rua, numero, bairro, cidade },
+    payload: {
+      id,
+      nome,
+      sexo,
+      cpf,
+      nascimento,
+      cep,
+      rua,
+      numero,
+      bairro,
+      cidade,
+    },
   };
 }
 
