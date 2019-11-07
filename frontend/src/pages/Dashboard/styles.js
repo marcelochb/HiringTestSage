@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 import { darken } from 'polished';
 
+import Button from '~/components/Button';
+
 export const Container = styled.div`
   padding: 0 25px;
 `;
@@ -87,3 +89,5 @@ export const Nome = styled.strong`
     opacity: 1;
   }
 `;
+
+export const CreateButton = styled(Button)``;

@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { MdHighlightOff, MdLoyalty } from 'react-icons/md';
 
-import { Container, Content, Linha, Nome } from './styles';
+import { Container, Content, Linha, Nome, CreateButton } from './styles';
 
 import { detailPessoaRequest } from '~/store/modules/pessoa/actions';
 import api from '~/services/api';
@@ -34,7 +34,10 @@ export default function Dasshboard() {
       toast.error('Falha ao deletar.');
     }
   }
-
+  /**
+   * Function pega os dados da pessoa
+   * e salva em um estado global (reducer)
+   */
   function handleDetail({
     id,
     nome,
@@ -69,18 +72,15 @@ export default function Dasshboard() {
         <header>
           <strong>Pessoas</strong>
           <Link to="/create">
-            <button type="button">
+            <CreateButton tipo="button" texto="Novo" icon="MdLoyalty">
               <MdLoyalty />
-              Novo
-            </button>
+            </CreateButton>
           </Link>
         </header>
         <ul>
           {pessoas.map(pessoa => (
             <Linha key={pessoa.id}>
-              <Link to="/update">
-                <Nome onClick={() => handleDetail(pessoa)}>{pessoa.nome}</Nome>
-              </Link>
+              <Nome onClick={() => handleDetail(pessoa)}>{pessoa.nome}</Nome>
               <span>
                 {pessoa.cidade}
                 <MdHighlightOff onClick={() => handleDestroy(pessoa)} />

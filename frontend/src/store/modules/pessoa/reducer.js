@@ -11,10 +11,6 @@ export default function pessoa(state = INITIAL_STATE, action) {
         draft.detail = action.payload;
         break;
       }
-      case '@pessoa/UPDATE_SUCCESS': {
-        draft.detail = action.payload.pessoa;
-        break;
-      }
       default:
         break;
     }

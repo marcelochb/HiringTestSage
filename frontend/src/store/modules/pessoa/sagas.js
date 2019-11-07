@@ -1,95 +1,10 @@
 import { all, takeLatest, call } from 'redux-saga/effects';
 import { toast } from 'react-toastify';
 
-import api from '~/services/api';
 import history from '~/services/history';
-
-export function* createPessoa({ payload }) {
-  try {
-    const {
-      nome,
-      sexo,
-      cpf,
-      nascimento,
-      cep,
-      rua,
-      numero,
-      bairro,
-      cidade,
-    } = payload;
-
-    yield call(api.post, 'pessoas', {
-      nome,
-      sexo,
-      cpf,
-      nascimento,
-      cep,
-      rua,
-      numero,
-      bairro,
-      cidade,
-    });
-
-    toast.success('Cadastro realizado com sucesso.');
-
-    history.push('/');
-  } catch (err) {
-    toast.error('Erro ao cadastrar, confira seus dados.');
-  }
-}
-
-export function* updatePessoa({ payload }) {
-  try {
-    const {
-      id,
-      nome,
-      sexo,
-      cpf,
-      nascimento,
-      cep,
-      rua,
-      numero,
-      bairro,
-      cidade,
-    } = payload;
-
-    yield call(api.put, `pessoas/${id}`, {
-      nome,
-      sexo,
-      cpf,
-      nascimento,
-      cep,
-      rua,
-      numero,
-      bairro,
-      cidade,
-    });
-
-    toast.success('Atualizado com sucesso.');
-
-    history.push('/');
-  } catch (err) {
-    toast.error('Falha ao atualizar');
-  }
-}
-
-export function* destroyPessoa({ payload }) {
-  try {
-    const { id } = payload;
-    yield call(api.delete, `pessoas/${id}`);
-
-    toast.success('Pessoa deletada com sucesso.');
-  } catch (err) {
-    toast.error('Falha ao deletar.');
-  }
-}
 
 export function detailPessoa() {
   history.push('/update');
 }
 
-export default all([
-  takeLatest('@pessoa/CREATE_REQUEST', createPessoa),
-  takeLatest('@pessoa/UPDATE_REQUEST', updatePessoa),
-  takeLatest('@pessoa/DESTROY_REQUEST', destroyPessoa),
-]);
+export default all([takeLatest('@pessoa/DETAIL_REQUEST', detailPessoa)]);
