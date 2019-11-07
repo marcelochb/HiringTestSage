@@ -186,12 +186,11 @@ export default function CreatePessoas() {
           </Endereco>
           <aside>
             <VoltarButton
-              type="button"
+              tipo="button"
+              texto="Voltar"
               visible={visible}
               onClick={() => setVisible(!visible)}
-            >
-              Voltar
-            </VoltarButton>
+            ></VoltarButton>
             <ContinueButton
               id="continuar"
               type="button"

@@ -72,9 +72,11 @@ export default function Dasshboard() {
         <header>
           <strong>Pessoas</strong>
           <Link to="/create">
-            <CreateButton tipo="button" texto="Novo" icon="MdLoyalty">
-              <MdLoyalty />
-            </CreateButton>
+            <CreateButton
+              tipo="button"
+              texto="Novo"
+              Icon={MdLoyalty}
+            ></CreateButton>
           </Link>
         </header>
         <ul>

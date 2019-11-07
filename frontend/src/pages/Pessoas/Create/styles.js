@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { darken } from 'polished';
+import Button from '~/components/Button';
 
 export const Container = styled.div`
   padding: 0 25px;
@@ -74,28 +75,11 @@ export const Endereco = styled.div`
   }
 `;
 
-export const VoltarButton = styled.button`
+export const VoltarButton = styled(Button)`
   display: ${props => (props.visible ? 'none' : 'flex')};
-  margin: 5px 15px 0;
-  padding: 0 15px;
-  height: 44px;
-  max-width: 172px;
-  background: #f94d6a;
-  font-weight: bold;
-  color: #fff;
-  border: 0;
-  border-radius: 4px;
-  font-size: 16px;
-  transition: background 0.2s;
-  &:hover {
-    background: ${darken(0.03, '#F94D6A')};
-  }
-  svg {
-    margin-right: 5px;
-  }
 `;
 
-export const SubmitButton = styled.button`
+export const SubmitButton = styled(Button)`
   display: ${props => (props.visible ? 'none' : 'flex')};
   margin: 5px 0 0;
   padding: 0 15px;
@@ -116,7 +100,7 @@ export const SubmitButton = styled.button`
   }
 `;
 
-export const ContinueButton = styled.button`
+export const ContinueButton = styled(Button)`
   display: ${props => (props.visible ? 'flex' : 'none')};
   margin: 5px 0 0;
   padding: 0 15px;

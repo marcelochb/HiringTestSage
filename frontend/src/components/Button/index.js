@@ -1,12 +1,11 @@
 import React from 'react';
-import Icon from 'react-icons';
-
+import 'react-icons/all';
 import { Botao } from './styles';
 
-export default function Button({ texto, tipo, handle, icon }) {
+export default function Button({ texto, tipo, handle, Icon }) {
   return (
     <Botao type={tipo} onClick={handle}>
-      <Icon type={icon}></Icon>
+      {Icon && <Icon />}
       {texto}
     </Botao>
   );
