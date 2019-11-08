@@ -1,8 +1,8 @@
-import React, { useState, createRef } from 'react';
+import React, { useState } from 'react';
 import { Form, Input, Choice } from '@rocketseat/unform';
-import * as Yup from 'yup';
 import { toast } from 'react-toastify';
 import InputMask from 'react-input-mask';
+import { parseISO } from 'date-fns';
 import { MdInput, MdSystemUpdateAlt, MdRestore } from 'react-icons/md';
 
 import {
@@ -18,30 +18,9 @@ import {
 import api from '~/services/api';
 import history from '~/services/history';
 
-/**
- * Schema completo para validação
- */
-const schema = Yup.object().shape({
-  nome: Yup.string().required('O Nome é obrigatório'),
-  sexo: Yup.string().required('O Sexo é obrigatório'),
-  cpf: Yup.string().required('A CPF é obrigatório'),
-  nascimento: Yup.string().required('A Data de nascimento é obrigatória'),
-  cep: Yup.string().required('O Cep é obrigatório'),
-  rua: Yup.string().required('A rua é obrigatória'),
-  numero: Yup.string().required('O numero é obrigatório'),
-  bairro: Yup.string().required('O bairro é obrigatório'),
-  cidade: Yup.string().required('A cidade é obrigatório'),
-});
-
-/**
- * Schema apenas da primeira parte do cadastro
- */
-const schemaDadosPessoais = Yup.object().shape({
-  nome: Yup.string().required('O Nome é obrigatório'),
-  sexo: Yup.string().required('O Sexo é obrigatório'),
-  cpf: Yup.string().required('A CPF é obrigatório'),
-  nascimento: Yup.string().required('A Data de nascimento é obrigatória'),
-});
+import BuscaCep from '~/services/BuscaCep';
+import schema from '~/validators/PessoaTodos';
+import schemaDadosPessoais from '~/validators/PessoaDadosPessoais';
 
 /**
  * Opções do campo Choice
@@ -88,18 +67,19 @@ export default function CreatePessoas() {
    */
   async function handleCep(cep) {
     try {
-      const response = await api.get(
-        `http://apps.widenet.com.br/busca-cep/api/cep.json`,
-        {
-          params: { code: cep },
-        }
-      );
-      const { city, district, address } = response.data;
-      setRua(district);
-      setCidade(city);
-      setBairro(address);
+      const { cidade, bairro, rua, message } = await BuscaCep.run({
+        code: cep,
+      });
+
+      if (message) return toast.warn(message);
+
+      setRua(rua);
+      setCidade(cidade);
+      setBairro(bairro);
+
       toast.success('Cep Localizado com sucesso.');
-      this.numero.current.focus();
+
+      document.getElementById('numero').focus();
     } catch (err) {}
   }
   /**
@@ -147,11 +127,13 @@ export default function CreatePessoas() {
     cidade,
   }) {
     try {
+      const [dia, mes, ano] = nascimento.split('/');
+      const formatedData = parseISO(`${ano}-${mes}-${dia}`);
       await api.post('pessoas', {
         nome,
         sexo,
         cpf,
-        nascimento,
+        nascimento: formatedData,
         cep,
         rua,
         numero,
@@ -167,8 +149,8 @@ export default function CreatePessoas() {
 
       history.push('/');
     } catch (err) {
-      console.log(err);
-      toast.error('Erro ao cadastrar, confira seus dados.');
+      const { error } = err.response.data;
+      toast.error(error);
     }
   }
 

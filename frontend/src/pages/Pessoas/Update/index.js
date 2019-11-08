@@ -4,7 +4,6 @@ import { Form, Input, Choice } from '@rocketseat/unform';
 import { format, parseISO } from 'date-fns';
 import { toast } from 'react-toastify';
 import InputMask from 'react-input-mask';
-import * as Yup from 'yup';
 import { MdInput, MdSystemUpdateAlt, MdRestore } from 'react-icons/md';
 
 import {
@@ -20,30 +19,10 @@ import {
 import api from '~/services/api';
 import history from '~/services/history';
 
-/**
- * Schema completo para validação
- */
-const schema = Yup.object().shape({
-  nome: Yup.string().required('O Nome é obrigatório'),
-  sexo: Yup.string().required('O Sexo é obrigatório'),
-  cpf: Yup.string().required('A CPF é obrigatório'),
-  nascimento: Yup.string().required('A Data de nascimento é obrigatória'),
-  cep: Yup.string().required('O Nome é obrigatório'),
-  rua: Yup.string().required('A rua é obrigatória'),
-  numero: Yup.string().required('O numero é obrigatório'),
-  bairro: Yup.string().required('O bairro é obrigatório'),
-  cidade: Yup.string().required('A cidade é obrigatório'),
-});
+import BuscaCep from '~/services/BuscaCep';
+import schema from '~/validators/PessoaTodos';
+import schemaDadosPessoais from '~/validators/PessoaDadosPessoais';
 
-/**
- * Schema apenas da primeira parte do cadastro
- */
-const schemaDadosPessoais = Yup.object().shape({
-  nome: Yup.string().required('O Nome é obrigatório'),
-  sexo: Yup.string().required('O Sexo é obrigatório'),
-  cpf: Yup.string().required('A CPF é obrigatório'),
-  nascimento: Yup.string().required('A Data de nascimento é obrigatória'),
-});
 /**
  * Opções do campo Choice
  */
@@ -69,6 +48,36 @@ export default function UpdatePessoas() {
   const [errorSexo, setErrorSexo] = useState([]);
   const [errorCpf, setErrorCpf] = useState([]);
   const [errorNascimento, setErrorNascimento] = useState([]);
+
+  /**
+   * Estado para receber a busca pelo cep
+   */
+  const [cep, setCep] = useState(pessoa.cep);
+  const [rua, setRua] = useState(pessoa.rua);
+  const [cidade, setCidade] = useState(pessoa.cidade);
+  const [bairro, setBairro] = useState(pessoa.bairro);
+
+  /**
+   * Function que busca
+   * o endereço pelo CEP
+   */
+  async function handleCep(cep) {
+    try {
+      const { cidade, bairro, rua, message } = await BuscaCep.run({
+        code: cep,
+      });
+
+      if (message) return toast.warn(message);
+
+      setRua(rua);
+      setCidade(cidade);
+      setBairro(bairro);
+
+      toast.success('Cep Localizado com sucesso.');
+
+      document.getElementById('numero').focus();
+    } catch (err) {}
+  }
 
   /**
    * Function que valida e seta os erros
@@ -115,11 +124,13 @@ export default function UpdatePessoas() {
     cidade,
   }) {
     try {
+      const [dia, mes, ano] = nascimento.split('/');
+      const formatedData = parseISO(`${ano}-${mes}-${dia}`);
       await api.put(`pessoas/${pessoa.id}`, {
         nome,
         sexo,
         cpf,
-        nascimento,
+        nascimento: formatedData,
         cep,
         rua,
         numero,
@@ -129,7 +140,8 @@ export default function UpdatePessoas() {
       toast.success('Atualizado com sucesso.');
       history.push('/');
     } catch (err) {
-      toast.error('Erro ao atualizar, confira seus dados.');
+      const { error } = err.response.data;
+      toast.error(error);
     }
   }
 
@@ -180,13 +192,33 @@ export default function UpdatePessoas() {
           <Endereco visible={visible}>
             <strong>Endereço</strong>
 
-            <InputMask mask="99999-999" value={pessoa.cep}>
+            <InputMask
+              mask="99999-999"
+              value={cep}
+              onChange={e => setCep(e.target.value)}
+              onBlur={e => handleCep(e.target.value)}
+            >
               {() => <Input name="cep" placeholder="Digite o cep" />}
             </InputMask>
-            <Input name="rua" placeholder="Digite a rua" />
-            <Input name="numero" placeholder="Digite o numero" />
-            <Input name="bairro" placeholder="Digite o bairro" />
-            <Input name="cidade" placeholder="Digite o cidade" />
+            <Input
+              name="rua"
+              placeholder="Digite a rua"
+              value={rua}
+              onChange={e => setRua(e.target.value)}
+            />
+            <Input name="numero" type="number" placeholder="Digite o numero" />
+            <Input
+              name="bairro"
+              placeholder="Digite o bairro"
+              value={bairro}
+              onChange={e => setBairro(e.target.value)}
+            />
+            <Input
+              name="cidade"
+              placeholder="Digite o cidade"
+              value={cidade}
+              onChange={e => setCidade(e.target.value)}
+            />
           </Endereco>
           <aside>
             <VoltarButton
