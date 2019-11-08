@@ -185,9 +185,15 @@ export default function CreatePessoas() {
             {errorCpf && <span>{errorCpf}</span>}
 
             <InputMask
-              mask="99/99/9999"
+              mask="dD/mD/yDDD"
               onChange={e => setNascimento(e.target.value)}
               value={nascimento}
+              formatChars={{
+                d: '[0-3]',
+                D: '[0-9]',
+                m: '[0-1]',
+                y: '[1-2]',
+              }}
             >
               {() => (
                 <Input
@@ -204,10 +210,25 @@ export default function CreatePessoas() {
             <InputMask mask="99999-999" onBlur={e => handleCep(e.target.value)}>
               {() => <Input name="cep" placeholder="Digite o cep" />}
             </InputMask>
-            <Input name="rua" placeholder="Digite a rua" value={rua} />
+            <Input
+              name="rua"
+              placeholder="Digite a rua"
+              value={rua}
+              onChange={e => setRua(e.target.value)}
+            />
             <Input name="numero" type="number" placeholder="Digite o numero" />
-            <Input name="bairro" placeholder="Digite o bairro" value={bairro} />
-            <Input name="cidade" placeholder="Digite o cidade" value={cidade} />
+            <Input
+              name="bairro"
+              placeholder="Digite o bairro"
+              value={bairro}
+              onChange={e => setBairro(e.target.value)}
+            />
+            <Input
+              name="cidade"
+              placeholder="Digite o cidade"
+              value={cidade}
+              onChange={e => setCidade(e.target.value)}
+            />
           </Endereco>
           <aside>
             <VoltarButton

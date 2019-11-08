@@ -1,9 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { MdHighlightOff, MdOpenInNew } from 'react-icons/md';
-
-import { Container, Content, Linha, Nome, CreateButton } from './styles';
+import {
+  MdHighlightOff,
+  MdOpenInNew,
+  MdChevronLeft,
+  MdChevronRight,
+} from 'react-icons/md';
+import {
+  Container,
+  Content,
+  Linha,
+  Nome,
+  CreateButton,
+  Footer,
+  Page,
+  SetaDireita,
+  SetaEsquerda,
+} from './styles';
 
 import { detailPessoaRequest } from '~/store/modules/pessoa/actions';
 import api from '~/services/api';
@@ -11,17 +25,28 @@ import { toast } from 'react-toastify';
 
 export default function Dasshboard() {
   const [pessoas, setPessoas] = useState([]);
+  const [page, setPage] = useState(1);
+  const [visibleDireita, setVisibleDireita] = useState(false);
+  const [visibleEsquerda, setVisibleEsquerda] = useState(false);
+  const [visiblePage, setVisiblePage] = useState(false);
   const dispatch = useDispatch();
 
   async function loadPessoas() {
-    const response = await api.get('pessoas');
-
+    const response = await api.get(`pessoas?page=${page}`);
+    const qtd = response.data && response.data.length;
+    /**
+     * Verificações para visualizar
+     * as mudanças de paginas
+     */
+    setVisibleDireita(qtd === 5 ? true : false);
+    setVisibleEsquerda(page > 1 ? true : false);
+    setVisiblePage(page === 1 && qtd < 5 ? false : true);
     setPessoas(response.data);
   }
 
   useEffect(() => {
     loadPessoas();
-  }, [pessoas]);
+  }, [page]);
 
   async function handleDestroy({ id }) {
     try {
@@ -91,6 +116,19 @@ export default function Dasshboard() {
             </Linha>
           ))}
         </ul>
+        <Footer>
+          <Page visible={visiblePage}>
+            <SetaEsquerda visible={visibleEsquerda}>
+              <MdChevronLeft
+                onClick={() => (page > 1 ? setPage(page - 1) : setPage(1))}
+              />
+            </SetaEsquerda>
+            <span>{page}</span>
+            <SetaDireita visible={visibleDireita}>
+              <MdChevronRight onClick={() => setPage(page + 1)} />
+            </SetaDireita>
+          </Page>
+        </Footer>
       </Content>
     </Container>
   );

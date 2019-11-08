@@ -34,7 +34,6 @@ export const Linha = styled.li`
   justify-content: space-between;
   align-self: center;
   border-radius: 4px;
-  opacity: ${props => (props.past ? 0.6 : 1)};
   span {
     display: flex;
     align-items: center;
@@ -67,3 +66,52 @@ export const Nome = styled.strong`
 `;
 
 export const CreateButton = styled(Button)``;
+
+export const Footer = styled.div`
+  padding: 20px;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-self: center;
+  border-radius: 4px;
+`;
+export const Page = styled.div`
+  display: ${props => (props.visible ? 'flex' : 'none')};
+  justify-content: space-between;
+  align-items: center;
+  align-content: center;
+  span {
+    color: #999;
+    font-size: 25px;
+    margin: 0 15px;
+  }
+`;
+
+export const SetaDireita = styled.div`
+  display: ${props => (props.visible ? 'flex' : 'none')};
+  svg {
+    background: rgba(0, 0, 0, 0.1);
+    align-self: center;
+    color: #fff;
+    cursor: pointer;
+    font-size: 44px;
+    opacity: 0.8;
+    &:hover {
+      opacity: 1;
+    }
+  }
+`;
+export const SetaEsquerda = styled.div`
+  display: ${props => (props.visible ? 'flex' : 'none')};
+  svg {
+    background: rgba(0, 0, 0, 0.1);
+    align-self: center;
+    color: #fff;
+    cursor: pointer;
+    font-size: 44px;
+    opacity: 0.8;
+    &:hover {
+      opacity: 1;
+    }
+  }
+`;
