@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Form, Input } from '@rocketseat/unform';
+import { Form, Input, Choice } from '@rocketseat/unform';
 import { format, parseISO } from 'date-fns';
 import { toast } from 'react-toastify';
 import InputMask from 'react-input-mask';
 import * as Yup from 'yup';
+import { MdInput, MdSystemUpdateAlt, MdRestore } from 'react-icons/md';
 
 import {
   Container,
@@ -14,10 +15,14 @@ import {
   VoltarButton,
   SubmitButton,
   ContinueButton,
+  ChoiceField,
 } from './styles';
 import api from '~/services/api';
 import history from '~/services/history';
 
+/**
+ * Schema completo para validação
+ */
 const schema = Yup.object().shape({
   nome: Yup.string().required('O Nome é obrigatório'),
   sexo: Yup.string().required('O Sexo é obrigatório'),
@@ -30,12 +35,22 @@ const schema = Yup.object().shape({
   cidade: Yup.string().required('A cidade é obrigatório'),
 });
 
+/**
+ * Schema apenas da primeira parte do cadastro
+ */
 const schemaDadosPessoais = Yup.object().shape({
   nome: Yup.string().required('O Nome é obrigatório'),
   sexo: Yup.string().required('O Sexo é obrigatório'),
   cpf: Yup.string().required('A CPF é obrigatório'),
   nascimento: Yup.string().required('A Data de nascimento é obrigatória'),
 });
+/**
+ * Opções do campo Choice
+ */
+const options = [
+  { value: 'Feminino', label: 'Feminino' },
+  { value: 'Masculino', label: 'Masculino' },
+];
 
 export default function UpdatePessoas() {
   const pessoa = useSelector(state => state.pessoa.detail);
@@ -128,15 +143,15 @@ export default function UpdatePessoas() {
               name="nome"
               placeholder="Digite seu nome completo"
               onChange={e => setNome(e.target.value)}
-              value={nome}
             />
             {errorNome && <span>{errorNome}</span>}
-            <Input
-              name="sexo"
-              placeholder="Digite o sexo"
-              onChange={e => setSexo(e.target.value)}
-              value={sexo}
-            />
+            <ChoiceField>
+              <Choice
+                name="sexo"
+                options={options}
+                onChange={e => setSexo(e.target.value)}
+              />
+            </ChoiceField>
             {errorSexo && <span>{errorSexo}</span>}
             <InputMask
               mask="999.999.999-99"
@@ -165,7 +180,7 @@ export default function UpdatePessoas() {
           <Endereco visible={visible}>
             <strong>Endereço</strong>
 
-            <InputMask mask="99.999-999" value={pessoa.cep}>
+            <InputMask mask="99999-999" value={pessoa.cep}>
               {() => <Input name="cep" placeholder="Digite o cep" />}
             </InputMask>
             <Input name="rua" placeholder="Digite a rua" />
@@ -175,23 +190,27 @@ export default function UpdatePessoas() {
           </Endereco>
           <aside>
             <VoltarButton
-              type="button"
-              visible={visible}
-              onClick={() => setVisible(!visible)}
-            >
-              Voltar
-            </VoltarButton>
+              tipo="button"
+              texto="Voltar"
+              visible={!visible}
+              Icon={MdRestore}
+              handle={() => setVisible(!visible)}
+            />
             <ContinueButton
               id="continuar"
-              type="button"
+              tipo="button"
+              texto="Continuar..."
+              Icon={MdInput}
               visible={visible}
-              onClick={handleVisible}
-            >
-              Continuar...
-            </ContinueButton>
-            <SubmitButton id="submit" type="submit" visible={visible}>
-              Salvar
-            </SubmitButton>
+              handle={handleVisible}
+            />
+            <SubmitButton
+              id="submit"
+              texto="Salvar"
+              tipo="submit"
+              Icon={MdSystemUpdateAlt}
+              visible={!visible}
+            />
           </aside>
         </Form>
       </Content>

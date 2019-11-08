@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { MdHighlightOff, MdLoyalty } from 'react-icons/md';
+import { MdHighlightOff, MdOpenInNew } from 'react-icons/md';
 
 import { Container, Content, Linha, Nome, CreateButton } from './styles';
 
@@ -75,7 +75,8 @@ export default function Dasshboard() {
             <CreateButton
               tipo="button"
               texto="Novo"
-              Icon={MdLoyalty}
+              Icon={MdOpenInNew}
+              visible={true}
             ></CreateButton>
           </Link>
         </header>

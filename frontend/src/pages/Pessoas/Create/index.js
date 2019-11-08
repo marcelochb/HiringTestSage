@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
-import { Form, Input } from '@rocketseat/unform';
+import React, { useState, createRef } from 'react';
+import { Form, Input, Choice } from '@rocketseat/unform';
 import * as Yup from 'yup';
-
+import { toast } from 'react-toastify';
 import InputMask from 'react-input-mask';
+import { MdInput, MdSystemUpdateAlt, MdRestore } from 'react-icons/md';
 
 import {
   Container,
@@ -12,11 +13,14 @@ import {
   VoltarButton,
   SubmitButton,
   ContinueButton,
+  ChoiceField,
 } from './styles';
 import api from '~/services/api';
 import history from '~/services/history';
-import { toast } from 'react-toastify';
 
+/**
+ * Schema completo para validação
+ */
 const schema = Yup.object().shape({
   nome: Yup.string().required('O Nome é obrigatório'),
   sexo: Yup.string().required('O Sexo é obrigatório'),
@@ -29,12 +33,23 @@ const schema = Yup.object().shape({
   cidade: Yup.string().required('A cidade é obrigatório'),
 });
 
+/**
+ * Schema apenas da primeira parte do cadastro
+ */
 const schemaDadosPessoais = Yup.object().shape({
   nome: Yup.string().required('O Nome é obrigatório'),
   sexo: Yup.string().required('O Sexo é obrigatório'),
   cpf: Yup.string().required('A CPF é obrigatório'),
   nascimento: Yup.string().required('A Data de nascimento é obrigatória'),
 });
+
+/**
+ * Opções do campo Choice
+ */
+const options = [
+  { value: 'Feminino', label: 'Feminino' },
+  { value: 'Masculino', label: 'Masculino' },
+];
 
 export default function CreatePessoas() {
   /**
@@ -60,6 +75,33 @@ export default function CreatePessoas() {
   const [errorCpf, setErrorCpf] = useState([]);
   const [errorNascimento, setErrorNascimento] = useState([]);
 
+  /**
+   * Estado para receber a busca pelo cep
+   */
+  const [rua, setRua] = useState([]);
+  const [cidade, setCidade] = useState([]);
+  const [bairro, setBairro] = useState([]);
+
+  /**
+   * Function que busca
+   * o endereço pelo CEP
+   */
+  async function handleCep(cep) {
+    try {
+      const response = await api.get(
+        `http://apps.widenet.com.br/busca-cep/api/cep.json`,
+        {
+          params: { code: cep },
+        }
+      );
+      const { city, district, address } = response.data;
+      setRua(district);
+      setCidade(city);
+      setBairro(address);
+      toast.success('Cep Localizado com sucesso.');
+      this.numero.current.focus();
+    } catch (err) {}
+  }
   /**
    * Function que valida e seta os erros
    */
@@ -125,6 +167,7 @@ export default function CreatePessoas() {
 
       history.push('/');
     } catch (err) {
+      console.log(err);
       toast.error('Erro ao cadastrar, confira seus dados.');
     }
   }
@@ -142,14 +185,14 @@ export default function CreatePessoas() {
               value={nome}
             />
             {errorNome && <span>{errorNome}</span>}
-            <Input
-              name="sexo"
-              placeholder="Digite o sexo"
-              onChange={e => setSexo(e.target.value)}
-              value={sexo}
-            />
+            <ChoiceField>
+              <Choice
+                name="sexo"
+                options={options}
+                onChange={e => setSexo(e.target.value)}
+              />
+            </ChoiceField>
             {errorSexo && <span>{errorSexo}</span>}
-
             <InputMask
               mask="999.999.999-99"
               onChange={e => setCpf(e.target.value)}
@@ -176,32 +219,37 @@ export default function CreatePessoas() {
 
           <Endereco visible={visible}>
             <strong>Endereço</strong>
-            <InputMask mask="99.999-999">
+            <InputMask mask="99999-999" onBlur={e => handleCep(e.target.value)}>
               {() => <Input name="cep" placeholder="Digite o cep" />}
             </InputMask>
-            <Input name="rua" placeholder="Digite a rua" />
+            <Input name="rua" placeholder="Digite a rua" value={rua} />
             <Input name="numero" type="number" placeholder="Digite o numero" />
-            <Input name="bairro" placeholder="Digite o bairro" />
-            <Input name="cidade" placeholder="Digite o cidade" />
+            <Input name="bairro" placeholder="Digite o bairro" value={bairro} />
+            <Input name="cidade" placeholder="Digite o cidade" value={cidade} />
           </Endereco>
           <aside>
             <VoltarButton
               tipo="button"
               texto="Voltar"
-              visible={visible}
-              onClick={() => setVisible(!visible)}
-            ></VoltarButton>
+              visible={!visible}
+              Icon={MdRestore}
+              handle={() => setVisible(!visible)}
+            />
             <ContinueButton
               id="continuar"
-              type="button"
+              tipo="button"
+              texto="Continuar..."
+              Icon={MdInput}
               visible={visible}
-              onClick={handleVisible}
-            >
-              Continuar...
-            </ContinueButton>
-            <SubmitButton id="submit" type="submit" visible={visible}>
-              Salvar
-            </SubmitButton>
+              handle={handleVisible}
+            />
+            <SubmitButton
+              id="submit"
+              texto="Salvar"
+              tipo="submit"
+              Icon={MdSystemUpdateAlt}
+              visible={!visible}
+            />
           </aside>
         </Form>
       </Content>

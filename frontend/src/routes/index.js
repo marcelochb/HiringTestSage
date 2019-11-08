@@ -9,12 +9,12 @@ import Update from '~/pages/Pessoas/Update';
 
 export default function Routes() {
   return (
-    <Switch>
-      <DefaultLayout>
+    <DefaultLayout>
+      <Switch>
         <Route path="/" exact component={Dashboard} />
         <Route path="/create" component={Create} />
         <Route path="/update" component={Update} />
-      </DefaultLayout>
-    </Switch>
+      </Switch>
+    </DefaultLayout>
   );
 }

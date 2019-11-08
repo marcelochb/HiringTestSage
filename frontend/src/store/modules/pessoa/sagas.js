@@ -1,5 +1,4 @@
-import { all, takeLatest, call } from 'redux-saga/effects';
-import { toast } from 'react-toastify';
+import { all, takeLatest } from 'redux-saga/effects';
 
 import history from '~/services/history';
 

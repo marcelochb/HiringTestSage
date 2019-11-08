@@ -2,11 +2,12 @@ import styled from 'styled-components';
 import { darken } from 'polished';
 
 export const Botao = styled.button`
-  display: flex;
+  display: ${props => (props.visible ? 'flex' : 'none')};
   align-items: center;
   align-content: center;
   justify-content: center;
-  background: #d44059;
+  margin: 0 5px;
+  background: rgba(0, 220, 0, 0.7);
   border: 0;
   border-radius: 4px;
   height: 42px;
@@ -17,7 +18,7 @@ export const Botao = styled.button`
   font-weight: bold;
   transition: background 0.2s;
   &:hover {
-    background: ${darken(0.08, '#d44059')};
+    background: ${darken(0.08, 'rgba(0, 220, 0, 0.7)')};
   }
   svg {
     margin-right: 8px;
