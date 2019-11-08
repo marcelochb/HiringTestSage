@@ -72,8 +72,8 @@ class PessoaController {
 
     const pessoas = await Pessoa.findAll({
       order: ['nome'],
-      limit: 10,
-      offset: 10 * page - 10,
+      limit: 5,
+      offset: 5 * page - 5,
     });
 
     return res.json(pessoas);
