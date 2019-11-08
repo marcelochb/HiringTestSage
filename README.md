@@ -38,6 +38,9 @@
 
 ## Recursos utilizados para desenvolver:
    ### Para o Back-End 
+   
+   ![alt text](https://github.com/marcelochb/HiringTestSage/blob/master/assets/TDD.result.png)
+
    - TDD com Jest;
    - Express;
    - Sucrase;
