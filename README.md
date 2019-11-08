@@ -37,9 +37,17 @@
       B) Execute o comando: yarn start
 
 ## Recursos utilizados para desenvolver:
-   # Para o Back-End foi utilizado 
+   ### Para o Back-End 
    - TDD com Jest;
    - Express;
    - Sucrase;
    - Yup;
    - Cors;
+   
+   ### Para o Front-End
+   - Axios;
+   - Redux;
+   - Redux-Saga;
+   - MaterialUI (icons);
+   - Yup;
+   - Styled-Component;
