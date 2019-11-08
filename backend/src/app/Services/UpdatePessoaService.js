@@ -27,7 +27,6 @@ class UpdatePessoaService {
         throw new Error('Já existe uma pessoa com este nome.');
       }
     }
-
     if (cpf && cpf !== pessoa.cpf) {
       const cpfExists = await Pessoa.findOne({ where: { cpf } });
 
