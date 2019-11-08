@@ -51,3 +51,23 @@
    - MaterialUI (icons);
    - Yup;
    - Styled-Component;
+
+_________________________________________
+# Cenário a ser desenvolvido
+Implementar uma rotina de cadastro de pessoa e endereço utilizando o conceito de wizard, onde os dados de pessoas estarão presentes no primeiro step e os endereços no segundo step.
+Observações:
+O projeto deve contemplar uma listagem de pessoas, edição, consulta e exclusão nos dois steps.
+Tecnologias
+• Frontend
+• React JS
+• Redux
+• Material UI
+• É essencial utilizar recursos de componentização do React JS
+Backend (Se especialisra em Dev Front End, usar o https://www.mocky.io/ na parte de backend)
+• NET Core
+• EF Core
+• MySQl, PostgreSQL ou SQL Server
+Entrega e documentação
+Deverá ser disponibilizada no repositório público do GitHub, bem como os passos para execução e validação do projeto
+Após receber esse teste, por gentileza, estipular o prazo de execução e me enviar no próximo dia útil.
+Serão avaliados pontos como: Usabilidade, boas práticas de programação, UI e qualidade do código.
