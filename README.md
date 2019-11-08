@@ -1,4 +1,5 @@
-# Front-End Dev Hiring Test - Teste para vaga de Front-End na SAGE
+# Front-End Dev Hiring Test 
+# Teste para vaga de Front-End na SAGE
 
 ## Instruções para testar a aplicação em modo de desenvolvimento
 
