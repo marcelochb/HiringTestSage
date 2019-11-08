@@ -51,6 +51,8 @@
    - MaterialUI (icons);
    - Yup;
    - Styled-Component;
+   - Componentização;
+   - Reactotron;
 
 _________________________________________
 # Cenário a ser desenvolvido
