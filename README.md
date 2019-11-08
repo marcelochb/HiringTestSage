@@ -1,6 +1,11 @@
 # Front-End Dev Hiring Test 
 # Teste para vaga de Front-End na SAGE
 
+## O teste foi publicado: 
+### [HiringTest!](https://gifted-booth-d3b096.netlify.com/)
+- Back-End (Heroku com postgres)
+- Front-End (Netlify)
+
 ## Instruções para testar a aplicação em modo de desenvolvimento
 
 ### 1 - Backend
