@@ -5,6 +5,8 @@
 - Back-End (Heroku com postgres)
 - Front-End (Netlify)
 
+   ![alt text](https://github.com/marcelochb/HiringTestSage/blob/master/assets/sageWeb.png)
+
 ## Instruções para testar a aplicação em modo de desenvolvimento
 
 ### 1 - Backend
